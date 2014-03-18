@@ -1,0 +1,8 @@
+**** log file for mission MISS_KobayashiMaru ****
+Starting Kobayashi Maru training simulation.
+Created fleets 1-3
+Warp drive damaged!  Front Shield hit.
+Warp has been destroyed
+Respawned Kralien fleet 1
+Artemis gets an ammo and energy reload
+Engineering destroyed - abandon ship

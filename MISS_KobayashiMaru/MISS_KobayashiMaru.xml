@@ -1,0 +1,299 @@
+<!-- mission_data is the big wrapper for all the parts of a mission -->
+<mission_data version="1.7" background_id_arme="">
+  <!--  KOBAYASHI MARU inspired by Star Trek II  -->
+  <!--  Mission Script by Erik Moore -->
+  <!--  Modified by MobileMacTech -->
+  <!-- ******************************************************************************************** -->
+  <!-- all the things that exist at the start of the mission -->
+  <start>
+    <set_variable name="KM_Version" value="1.5" />
+    <create type="player" x="96680.0" y="0.0" z="2023.0" angle="180.0" name="Artemis" />
+    <create count="200" type="nebulas" startX="0.0" startY="0.0" startZ="50000.0" endX="100000.0" endY="0.0" endZ="50000.0" randomRange="10000" />
+    <big_message title="Kobayashi Maru Simulation" subtitle1="Starfleet Academy Training" subtitle2="San Francisco, CA" />
+    <set_variable name="kmcommA" value="0" />
+    <set_variable name="kmcommB" value="0" />
+    <set_variable name="kmcommC" value="0" />
+    <set_variable name="kmcommD" value="0" />
+    <set_variable name="kmcommE" value="0" />
+    <set_variable name="kcommF" value="0" />
+    <set_variable name="kmcommG" value="0.0" />
+    <set_variable name="warpoffline" value="0" />
+    <set_variable name="missionstart" value="1" />
+    <set_variable name="warpcomm" value="0" />
+    <log text="Starting Kobayashi Maru training simulation." />
+    <set_timer name="km1" seconds="30" />
+  </start>
+  <!-- Kobayashi Maru distress call 1 -->
+  <event id_arme="f9b83aae-a588-48a4-a0ae-1b19ec0df33d">
+    <if_variable name="kmcommA" comparator="EQUALS" value="0" />
+    <if_timer_finished name="km1" />
+    <big_message title="DISTRESS CALL DETECTED" subtitle1="" subtitle2="" />
+    <incoming_comms_text from="Kobayashi Maru">Imperative! Imperative! This is the Kobayashi Maru -- nineteen periods out of Altair Six. We have struck a gravitic mine and have lost all power...	 Our hull is penetrated...	 and we have sustained many casualties...</incoming_comms_text>
+    <incoming_message from="Kobayashi Maru" fileName="KM1.ogg" mediaType="0" />
+    <set_variable name="kmcommA" value="1" />
+    <set_timer name="km2" seconds="20" />
+  </event>
+  <!-- Kobayashi Maru distress call 2-->
+  <event name_arme="Event 1.5" id_arme="f638fbcf-be22-4d56-822d-430ee2e0e539">
+    <if_variable name="kmcommA" comparator="EQUALS" value="1" />
+    <if_variable name="kmcommB" comparator="EQUALS" value="0" />
+    <if_timer_finished name="km2" />
+    <incoming_comms_text from="Kobayashi Maru">            
+	 Our position is Gamma Hydra, Section Ten...
+	 
+	 Hull penetrated, life support systems failing. Can you assist us, Artemis? Can you...
+    </incoming_comms_text>
+    <incoming_message from="Kobayashi Maru" fileName="KM2.ogg" mediaType="0" />
+    <set_variable name="kmcommB" value="1" />
+    <!-- Create the Kobayashi Maru and break it! -->
+    <create type="neutral" x="50000" y="0" z="80000" angle="0" name="Kobayashi Maru" raceKeys="friendly" hullKeys="Transport cargo" />
+    <clear_ai name="Kobayashi Maru" />
+    <add_ai type="DIR_THROTTLE" value1="0" value2="0" name="Kobayashi Maru" />
+    <set_timer name="km3" seconds="20" />
+  </event>
+  <!--Library computer data on KM-->
+  <event id_arme="245b7122-bb24-4571-bd58-8cd69012ef16">
+    <if_variable name="kmcommB" comparator="EQUALS" value="1" />
+    <if_variable name="kcommF" comparator="EQUALS" value="0" />
+    <if_timer_finished name="km3" />
+    <incoming_comms_text from="Library Computer">Data on transport ship Kobayashi Maru has been retrieved.</incoming_comms_text>
+    <incoming_message from="Data: Kobayashi Maru" fileName="KM3.ogg" mediaType="0" />
+    <warning_popup_message message="Vessel Detected" consoles="S" />
+    <set_variable name="kcommF" value="1" />
+  </event>
+  <!-- Entering the Neutral Zone -->
+  <event id_arme="2524cbeb-bf4b-4bb1-bcef-e3e6ad8d9bba">
+    <if_variable name="kmcommC" comparator="EQUALS" value="0" />
+    <if_object_property property="positionZ" name="Artemis" comparator="GREATER" value="50000" />
+    <if_object_property property="positionZ" name="Artemis" comparator="LESS" value="55000" />
+    <big_message title="WARNING" subtitle1="We have entered the Neutral Zone" subtitle2="" />
+    <warning_popup_message message="Entering Neutral Zone" consoles="S" />
+    <play_sound_now filename="KM4.wav" />
+    <set_variable name="kmcommC" value="1" />
+  </event>
+  <!-- Bring on the Kralien!  -->
+  <event id_arme="e672a26f-c5c5-4c38-9012-0debca476b6a">
+    <if_exists name="Artemis" />
+    <if_fleet_count comparator="LESS_EQUAL" value="0" fleetnumber="1" />
+    <if_fleet_count comparator="LESS_EQUAL" value="0" fleetnumber="2" />
+    <if_fleet_count comparator="LESS_EQUAL" value="0" fleetnumber="3" />
+    <if_distance name1="Kobayashi Maru" name2="Artemis" comparator="LESS" value="1200" />
+    <play_sound_now filename="3Cruisers.wav" />
+    <incoming_comms_text from="Klingon Battlecrusier Ch'geth">Federation P'taq, you have violated the treaty! Lower your shields and prepare to be boarded or we will destroy you!</incoming_comms_text>
+    <create type="enemy" x="49545.0" y="0.0" z="80413.0" angle="0" name="KS1" hullID="3000" fleetnumber="1" />
+    <create type="enemy" x="49900.0" y="0.0" z="80413.0" angle="0" name="KS2" hullID="3001" fleetnumber="1" />
+    <create type="enemy" x="50345.0" y="0.0" z="80413.0" angle="0" name="KS3" hullID="3000" fleetnumber="1" />
+    <clear_ai name="KS1" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS1" />
+    <clear_ai name="KS2" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS2" />
+    <clear_ai name="KS3" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS3" />
+    <!-- Fleet 2! -->
+    <create type="enemy" x="40100.0" y="0.0" z="60000.0" angle="180" name="KS4" raceKeys="enemy" hullKeys="medium" fleetnumber="2" />
+    <create type="enemy" x="40300.0" y="0.0" z="60000.0" angle="180" name="KS5" raceKeys="enemy" hullKeys="large" fleetnumber="2" />
+    <create type="enemy" x="40500.0" y="0.0" z="60000.0" angle="180" name="KS6" raceKeys="enemy" hullKeys="medlium" fleetnumber="2" />
+    <clear_ai name="KS4" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS4" />
+    <clear_ai name="KS5" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS5" />
+    <clear_ai name="KS6" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS6" />
+    <!-- Fleet 3!! -->
+    <create type="enemy" x="60100.0" y="0.0" z="60000.0" angle="180" name="KS7" raceKeys="enemy" hullKeys="large" fleetnumber="3" />
+    <create type="enemy" x="60300.0" y="0.0" z="60000.0" angle="180" name="KS8" raceKeys="enemy" hullKeys="large" fleetnumber="3" />
+    <create type="enemy" x="60500.0" y="0.0" z="60000.0" angle="180" name="KS9" raceKeys="enemy" hullKeys="large" fleetnumber="3" />
+    <clear_ai name="KS7" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS7" />
+    <clear_ai name="KS8" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS8" />
+    <clear_ai name="KS9" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS9" />
+    <set_variable name="missionstart" value="0" />
+    <log text="Created fleets 1-3" />
+  </event>
+  <!-- MORE Kralien?! -->
+  <event id_arme="31ad001f-7fa8-4b59-afe8-e6d957f89b62">
+    <if_variable name="missionstart" comparator="EQUALS" value="0" />
+    <if_fleet_count comparator="LESS_EQUAL" value="0" fleetnumber="1" />
+    <!-- Respawn Fleet 1! -->
+    <create type="enemy" x="50100" y="0" z="81500" angle="0" name="KS1" raceKeys="enemy" hullKeys="medium" fleetnumber="1" />
+    <create type="enemy" x="50300" y="0" z="81500" angle="0" name="KS2" raceKeys="enemy" hullKeys="large" fleetnumber="1" />
+    <create type="enemy" x="50500" y="0" z="81500" angle="0" name="KS3" raceKeys="enemy" hullKeys="medium" fleetnumber="1" />
+    <clear_ai name="KS1" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS1" />
+    <clear_ai name="KS2" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS2" />
+    <clear_ai name="KS3" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS3" />
+    <log text="Respawned Kralien fleet 1" />
+  </event>
+  <event id_arme="ba9384b7-8736-4c49-854c-491cfa1aae41">
+    <if_variable name="missionstart" comparator="EQUALS" value="0" />
+    <if_fleet_count comparator="LESS_EQUAL" value="0" fleetnumber="2" />
+    <!-- Respawn Fleet 2!! -->
+    <create type="enemy" x="40100" y="0" z="60000" angle="180" name="KS4" raceKeys="enemy" hullKeys="large" fleetnumber="2" />
+    <create type="enemy" x="40300" y="0" z="60000" angle="180" name="KS5" raceKeys="enemy" hullKeys="medium" fleetnumber="2" />
+    <create type="enemy" x="40500" y="0" z="60000" angle="180" name="KS6" raceKeys="enemy" hullKeys="large" fleetnumber="2" />
+    <clear_ai name="KS4" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS4" />
+    <clear_ai name="KS5" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS5" />
+    <clear_ai name="KS6" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS6" />
+    <!-- give KS4 in fleet 2 warp drive -->
+    <add_ai type="ELITE_AI" name="KS5" />
+    <set_object_property property="eliteAbilityBits" value="32" name="KS5" />
+    <set_object_property property="eliteAIType" value="2" name="KS5" />
+    <log text="Respawned Kralien fleet 2" />
+  </event>
+  <event id_arme="b4da552c-56ae-474f-b44c-5025f9e12514">
+    <if_variable name="missionstart" comparator="EQUALS" value="0" />
+    <if_fleet_count comparator="LESS_EQUAL" value="0" fleetnumber="3" />
+    <!-- Respawn Fleet 3!!! -->
+    <create type="enemy" x="60100" y="0" z="60000" angle="180" name="KS7" raceKeys="enemy" hullKeys="large" fleetnumber="3" />
+    <create type="enemy" x="60300" y="0" z="60000" angle="180" name="KS8" raceKeys="enemy" hullKeys="large" fleetnumber="3" />
+    <create type="enemy" x="60500" y="0" z="60000" angle="180" name="KS9" raceKeys="enemy" hullKeys="large" fleetnumber="3" />
+    <clear_ai name="KS7" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS7" />
+    <clear_ai name="KS8" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS8" />
+    <clear_ai name="KS9" />
+    <add_ai type="ATTACK" targetName="Artemis" value1="0" name="KS9" />
+    <!-- give KS7 in fleet 3 warp drive -->
+    <add_ai type="ELITE_AI" name="KS7" />
+    <set_object_property property="eliteAbilityBits" value="32" name="KS7" />
+    <set_object_property property="eliteAIType" value="2" name="KS7" />
+    <log text="Respawned Kralien fleet 3" />
+  </event>
+  <!-- Knocked out warp drive!  Oh noes! -->
+  <event id_arme="5dba6fd2-59b1-4669-82bd-7ccd4a884922">
+    <if_variable name="warpoffline" comparator="EQUALS" value="0" />
+    <if_object_property property="shieldStateFront" name="Artemis" comparator="LESS" value="80" />
+    <set_variable name="warpoffline" value="1" />
+    <set_player_grid_damage value="1" index="3" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="2" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="1" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="0" systemType="systemWarp" countFrom="front" />
+    <log text="Warp drive damaged!  Front Shield hit." />
+  </event>
+  <event id_arme="96905ba8-4629-4cfd-b554-117f9154a6e9">
+    <if_variable name="warpoffline" comparator="EQUALS" value="0" />
+    <if_object_property property="shieldStateBack" name="Artemis" comparator="LESS" value="80" />
+    <set_variable name="warpoffline" value="1" />
+    <set_player_grid_damage value="1" index="3" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="2" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="1" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="0" systemType="systemWarp" countFrom="front" />
+    <log text="Warp drive damaged! Back shield hit." />
+  </event>
+  <!-- 
+  <event>
+	<if_variable name="warpoffline" comparator="EQUALS" value="0"/>
+	<if_object_property name="Artemis" property="systemDamageBeam" comparator="GREATER" value="0"/>
+	
+	<set_variable name="warpoffline" value="1"/>
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="3" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="2" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="1" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="0" value="1" /> 
+	<log text="Warp drive damaged! Beams hit."/>
+  </event>	
+ 
+  <event>
+	<if_variable name="warpoffline" comparator="EQUALS" value="0"/>
+	<if_object_property name="Artemis" property="systemDamageTorpedo" comparator="GREATER" value="10"/>
+	
+	<set_variable name="warpoffline" value="1"/>
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="3" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="2" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="1" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="0" value="1" /> 
+	<log text="Warp drive damaged! Torpedos hit."/>
+  </event>	  
+  
+  <event>
+	<if_variable name="warpoffline" comparator="EQUALS" value="0"/>
+	<if_object_property name="Artemis" property="systemDamageImpulse" comparator="GREATER" value="10"/>
+	
+	<set_variable name="warpoffline" value="1"/>
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="3" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="2" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="1" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="0" value="1" /> 
+	<log text="Warp drive damaged! Impulse hit."/>
+  </event>	
+  
+  <event>
+	<if_variable name="warpoffline" comparator="EQUALS" value="0"/>
+	<if_object_property name="Artemis" property="systemDamageWarp" comparator="GREATER" value="10"/>
+	
+	<set_variable name="warpoffline" value="1"/>
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="3" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="2" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="1" value="1" />
+	<set_player_grid_damage systemType="systemWarp" countFrom="front" index="0" value="1" /> 
+	<log text="Warp drive damaged! Warp hit."/>
+  </event>
+  -->
+  <!-- Keep them drives offline -->
+  <event id_arme="f147554c-ec6f-4481-9c17-ce80e3518048">
+    <if_variable name="warpoffline" comparator="EQUALS" value="1" />
+    <if_object_property property="systemDamageWarp" name="Artemis" comparator="LESS" value="90" />
+    <set_player_grid_damage value="1" index="3" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="2" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="1" systemType="systemWarp" countFrom="front" />
+    <set_player_grid_damage value="1" index="0" systemType="systemWarp" countFrom="front" />
+  </event>
+  <!-- Tell Engineering warp drive is offline -->
+  <event id_arme="01465dde-bd69-4421-8942-1985d5d7d85b">
+    <if_variable name="warpoffline" comparator="EQUALS" value="1" />
+    <if_variable name="warpcomm" comparator="EQUALS" value="0" />
+    <warning_popup_message message="Main energizer hit, Warp offline." consoles="E" />
+    <set_variable name="warpcomm" value="1" />
+    <log text="Warp has been destroyed" />
+  </event>
+  <!--Artemis gets more ammo and energy from KM-->
+  <event id_arme="84708d8b-54c8-4a3f-a906-75717a1c8c8a">
+    <if_variable name="kmcommG" comparator="EQUALS" value="0.0" />
+    <if_object_property property="countMine" name="Artemis" comparator="LESS_EQUAL" value="4.0" />
+    <if_object_property property="countHoming" name="Artemis" comparator="LESS_EQUAL" value="4.0" />
+    <incoming_comms_text from="Kobayashi Maru">Artemis...if you need extra ammunition, get within range and we can beam over some from our cargo!</incoming_comms_text>
+    <set_variable name="kmcommG" value="1.0" />
+  </event>
+  <event id_arme="58a43232-4eba-4aa2-b796-7ef7dff0a307">
+    <if_variable name="kmcommG" comparator="EQUALS" value="1.0" />
+    <if_distance name1="Kobayashi Maru" name2="Artemis" comparator="LESS" value="800.0" />
+    <incoming_comms_text from="Kobayashi Maru">Within range Artemis...transport complete!</incoming_comms_text>
+    <addto_object_property value="8.0" property="countHoming" name="Artemis" />
+    <addto_object_property value="4.0" property="countMine" name="Artemis" />
+    <addto_object_property value="4.0" property="countECM" name="Artemis" />
+    <addto_object_property value="500.0" property="energy" name="Artemis" />
+    <warning_popup_message message="Weapons replenished" consoles="W" />
+    <set_variable name="kmcommG" value="0.0" />
+    <log text="Artemis gets an ammo and energy reload" />
+  </event>
+  <!-- handle end of game (does not currently work well because the game stops everything when Artemis is destroyed)-->
+  <event id_arme="5aa94145-b617-4bdb-a7be-ea0fe3fd3900">
+    <if_variable name="kmcommD" comparator="EQUALS" value="0" />
+    <if_damcon_members team_index="0" comparator="EQUALS" value="0" />
+    <if_damcon_members team_index="1" comparator="EQUALS" value="0" />
+    <if_damcon_members team_index="2" comparator="EQUALS" value="0" />
+    <warning_popup_message message="Engineering destroyed" consoles="MEC" />
+    <big_message title="Prepare escape pods. Send out the Log Buoy... " subtitle1="All hands abandon ship. Repeat -- all hands --" subtitle2="" />
+    <set_variable name="kmcommD" value="1" />
+    <log text="Engineering destroyed - abandon ship" />
+  </event>
+  <event id_arme="1a812dbd-563f-4be2-90a2-40898f00a488">
+    <if_variable name="kmcommE" comparator="EQUALS" value="0" />
+    <if_object_property property="energy" name="Artemis" comparator="EQUALS" value="0" />
+    <warning_popup_message message="Systems inoperable" consoles="MEC" />
+    <set_variable name="kmcommE" value="1" />
+  </event>
+  <event id_arme="433d7664-0b76-4f9f-aed9-c2654fa5cd22">
+    <if_not_exists name="Artemis" />
+    <big_message title="Simulation Concluded" subtitle1="" subtitle2="" />
+    <end_mission />
+  </event>
+  <!-- ******************************************************************************************** -->
+</mission_data>
